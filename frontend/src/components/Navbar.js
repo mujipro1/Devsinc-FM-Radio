@@ -55,7 +55,7 @@ function Navbar() {
                 className="d-flex justify-content-end"
                 style={{ marginRight: "20px" }}
             >
-                <a className="btn btn-outline-light" href="agent">
+                <a className="btn btn-outline-light" href="/login">
                     Sell as Agent
                 </a>
             </div>

@@ -5,6 +5,7 @@ import Homepage from "./pages/Homepage";
 import Agent from "./pages/Agent";
 import CategoricalEvents from "./pages/CategoricalEvents";
 import Admin from "./pages/Admin";
+import SignIn from "./pages/Signin";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/plays" element={<CategoricalEvents type="qawwali"/>}></Route>
                     <Route path="/sports" element={<CategoricalEvents type="concert"/>}></Route>
                     <Route path="/others" element={<CategoricalEvents type="other"/>}></Route>
+                    <Route path="/login" element={<SignIn/>}></Route>
                 </Routes>
             </div>
         </Router>

@@ -110,8 +110,9 @@ def haversine(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
-@app.route('/customer/search', methods=['GET'])
+@app.route('/customer', methods=['GET'])
 def search_events():
+    
     type = request.args.get('type')
     query = request.args.get('query')
     lat = request.args.get('lat', type=float)

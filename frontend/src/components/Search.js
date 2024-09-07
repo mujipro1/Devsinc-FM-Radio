@@ -41,7 +41,7 @@ function SearchComponent() {
     setSearched(true);
     setLoading(true); // Set loading to true when search starts
     setError(''); // Clear any previous errors
-    let url = `http://localhost:5000/customer/search?type=${searchType.toLowerCase()}&query=${searchQuery}`;
+    let url = `http://localhost:5000/customer?type=${searchType.toLowerCase()}&query=${searchQuery}`;
     
     if (latitude && longitude) {
       url += `&lat=${latitude}&lon=${longitude}`;

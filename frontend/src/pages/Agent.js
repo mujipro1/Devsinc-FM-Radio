@@ -4,9 +4,10 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button } from "react-bootstrap";
-import Profile from "../components/Profile"; // Import the Profile component
-import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
-import EventList from "./EventList"; // Import the EventList component
+import Profile from "../components/Profile";
+import { useNavigate } from "react-router-dom";
+import EventList from "./EventList";
+import AddEventModal from "../components/AddEventModal";
 
 const localizer = momentLocalizer(moment);
 
@@ -14,64 +15,67 @@ const Agent = () => {
     const [activeTab, setActiveTab] = useState("events");
     const [events, setEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
-    const [newEventTitle, setNewEventTitle] = useState("");
-    const [selectedEvent, setSelectedEvent] = useState(null); // To track the selected event for editing
-    const [editTitle, setEditTitle] = useState(""); // To store the new title for editing
+    const [formattedDate, setFormattedDate] = useState(""); // New state for formatted date
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [showAddEventModal, setShowAddEventModal] = useState(false);
     const [agent, setAgent] = useState({
         name: "John Doe",
         description: "A short description about John Doe.",
-    }); // Example agent data
+    });
 
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         let url = `http://localhost:5000/agent?id=test`;
-    
 
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        fetch(url)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json(); // Parse JSON if response is ok
+            })
+            .then((data) => {
+                setEvents(data); // Update events state with the search results
+            })
+            .catch((error) => {
+                console.error("Error during search:", error);
+            });
+    });
+
+    const handleAddEvent = (newEvent) => {
+        const today = new Date().setHours(0, 0, 0, 0);
+
+        const newEventStartNormalized = new Date(newEvent.start).setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+        if (newEventStartNormalized < today) {
+            alert("Cannot add events to past dates.");
+            return;
         }
-        return response.json(); // Parse JSON if response is ok
-      })
-      .then(data => {
-        setEvents(data); // Update events state with the search results
-      })
-      .catch(error => {
-        console.error('Error during search:', error);
-      });
-    });  
-    // Handle adding a new event
-    const addEvent = () => {
-        if (newEventTitle && selectedDate) {
-            const today = new Date().setHours(0, 0, 0, 0); // Normalize time to compare dates only
-            const selectedDateNormalized = new Date(selectedDate).setHours(
-                0,
-                0,
-                0,
-                0
-            );
 
-            if (selectedDateNormalized < today) {
-                alert("Cannot add events to past dates.");
-                return;
-            }
-
-            const newEvent = {
-                id: events.length, // Assign a unique ID
-                title: newEventTitle,
-                start: new Date(selectedDate),
-                end: new Date(selectedDate),
-                allDay: true,
-            };
-            setEvents([...events, newEvent]);
-            setNewEventTitle(""); // Clear the input after adding
-            setSelectedDate(null); // Clear the selected date after adding
-        }
+        const event = {
+            id: events.length,
+            title: newEvent.title,
+            start: new Date(newEvent.start),
+            end: new Date(newEvent.end),
+            description: newEvent.description,
+            venue: newEvent.venue,
+            artist: newEvent.artist,
+            host: newEvent.host,
+            capacity: newEvent.capacity,
+            numberOfTickets: newEvent.numberOfTickets,
+            price: newEvent.price,
+            allDay: false,
+        };
+        setEvents([...events, event]);
     };
 
-    // Handle updating the event
     const updateEvent = () => {
         if (selectedEvent && editTitle) {
             const updatedEvents = events.map((event) =>
@@ -80,27 +84,24 @@ const Agent = () => {
                     : event
             );
             setEvents(updatedEvents);
-            setSelectedEvent(null); // Close the modal after editing
+            setSelectedEvent(null);
         }
     };
 
-    // Handle deleting the event
     const deleteEvent = () => {
         if (selectedEvent) {
             const filteredEvents = events.filter(
                 (event) => event.id !== selectedEvent.id
             );
             setEvents(filteredEvents);
-            setSelectedEvent(null); // Close the modal after deleting
+            setSelectedEvent(null);
         }
     };
 
-    // Handle updating agent profile
     const handleProfileUpdate = (updatedProfile) => {
         setAgent(updatedProfile);
     };
 
-    // Calendar Content
     const renderCalendar = () => {
         const today = new Date();
 
@@ -113,7 +114,7 @@ const Agent = () => {
                     endAccessor="end"
                     style={{ height: 500 }}
                     selectable
-                    min={today} // Disable selecting past dates
+                    min={today}
                     onSelectSlot={(slotInfo) => {
                         const selectedDateNormalized = new Date(
                             slotInfo.start
@@ -121,34 +122,26 @@ const Agent = () => {
                         const todayNormalized = today.setHours(0, 0, 0, 0);
 
                         if (selectedDateNormalized >= todayNormalized) {
-                            setSelectedDate(slotInfo.start); // Click on a date to add an event
+                            setSelectedDate(slotInfo.start);
+                            setFormattedDate(
+                                moment(slotInfo.start).format("MMMM Do YYYY")
+                            ); // Format and set the date
                         } else {
                             alert("Cannot add events to past dates.");
                         }
                     }}
                     onSelectEvent={(event) => {
-                        setSelectedEvent(event); // Open modal for editing
-                        setEditTitle(event.title); // Prefill the title for editing
+                        setSelectedEvent(event);
+                        setEditTitle(event.title);
                     }}
                 />
                 {selectedDate && (
                     <div className="mt-3">
-                        <h5>
-                            Add Event on{" "}
-                            {moment(selectedDate).format("MMMM Do YYYY")}
-                        </h5>
-                        <input
-                            type="text"
-                            placeholder="Event Title"
-                            className="form-control"
-                            value={newEventTitle}
-                            onChange={(e) => setNewEventTitle(e.target.value)}
-                        />
                         <button
-                            className="btn btn-primary mt-2"
-                            onClick={addEvent}
+                            className="btn btn-primary"
+                            onClick={() => setShowAddEventModal(true)}
                         >
-                            Add Event
+                            Add Event On {formattedDate}
                         </button>
                     </div>
                 )}
@@ -156,11 +149,20 @@ const Agent = () => {
         );
     };
 
-    // Render content based on active tab
     const renderContent = () => {
         switch (activeTab) {
             case "events":
-                return <EventList events={events} />;
+                return (
+                    <div>
+                        <button
+                            className="btn btn-primary mb-3"
+                            onClick={() => setShowAddEventModal(true)}
+                        >
+                            Add Event
+                        </button>
+                        <EventList events={events} />
+                    </div>
+                );
             case "calendar":
                 return renderCalendar();
             case "profile":
@@ -260,6 +262,13 @@ const Agent = () => {
                     </Modal.Footer>
                 </Modal>
             )}
+
+            {/* Modal for adding a new event */}
+            <AddEventModal
+                show={showAddEventModal}
+                handleClose={() => setShowAddEventModal(false)}
+                handleAddEvent={handleAddEvent}
+            />
         </div>
     );
 };

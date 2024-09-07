@@ -288,7 +288,23 @@ def admin():
         'agents': total_agents
     })
     
+@app.route('signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
+    role = 'agent'
     
+    query = "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)"
+    params = (name, email, password, role)
+    
+    user_id = execute_query(query, params)
+    
+    if user_id:
+        return jsonify({'message': 'User created successfully', 'user_id': user_id}), 201
+    else:
+        return jsonify({'error': 'Failed to create user'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

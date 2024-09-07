@@ -3,6 +3,36 @@ import './Search.css';
 
 function SearchComponent() {
   const [searchType, setSearchType] = useState('Artist');
+  const [location, setLocation] = useState('Select Location');
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+
+  const handleUseBrowserLocation = () => {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+          setLocation('Current Location');
+          console.log("Latitude: ", position.coords.latitude);
+          console.log("Longitude: ", position.coords.longitude);
+        },
+        (error) => {
+          console.error("Error obtaining location: ", error);
+          alert("Unable to retrieve your location. Please try again.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const handleUseGoogleMaps = () => {
+    alert("Google Maps functionality to be implemented.");
+    // Here, you would integrate with the Google Maps API
+    // Example: Use a modal to show a Google Maps instance allowing the user to pick a location
+  };
 
   return (
     <div className="search-container">
@@ -16,11 +46,11 @@ function SearchComponent() {
                 data-bs-toggle="dropdown" 
                 aria-expanded="false"
               >
-                Select Location
+                {location}
               </button>
               <ul className="dropdown-menu">
-                <li><button className="dropdown-item">Use Google Maps</button></li>
-                <li><button className="dropdown-item">Use Browser Location</button></li>
+                <li><button className="dropdown-item" onClick={handleUseGoogleMaps}>Use Google Maps</button></li>
+                <li><button className="dropdown-item" onClick={handleUseBrowserLocation}>Use Browser Location</button></li>
               </ul>
             </div>
           </div>

@@ -1,38 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './EventList.css';
 
-const EventList = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch events from Flask API
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/events');  // Flask server URL
-        if (!response.ok) {
-          throw new Error('Failed to fetch events');
-        }
-        const data = await response.json();
-        setEvents(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);  // Runs once on component mount
-
-  if (loading) {
-    return <div>Loading events...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+const EventList = ( {events} ) => {
 
   return (
     <div>

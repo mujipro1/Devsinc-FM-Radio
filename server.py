@@ -43,23 +43,49 @@ def execute_query(query):
 
 @app.route('/api/events', methods=['GET'])
 def get_events():
-    query = "SELECT * FROM events"
+
+    query = '''
+        SELECT 
+        events.id AS event_id, 
+        events.title, 
+        events.description, 
+        events.startdate, 
+        events.enddate, 
+        events.venue, 
+        events.artist, 
+        events.host, 
+        events.nooftickets, 
+        events.price, 
+        events.coords, 
+        events.agentID,
+        images.image_url
+    FROM events
+    LEFT JOIN images ON events.id = images.event_id;
+    '''
+    
     results = execute_query(query)
     events = []
     for row in results:
+        
+        # format dates
+        startdate = row[3].strftime('%d-%m-%Y')
+        enddate = row[4].strftime('%d-%m-%Y')
+        
         event = {
             'id': row[0],  # Assuming 'id' is the first column
             'title': row[1],
             'description': row[2],
-            'startdate': row[3],
-            'enddate': row[4],
+            'startdate': startdate, 
+            'enddate': enddate,
             'venue': row[5],
             'artist': row[6],
             'host': row[7],
             'nooftickets': row[8],
             'price': row[9],
             'coords': row[10],
-            'agentID': row[11]
+            'agentID': row[11],
+            'image': row[12]
+            
         }
         events.append(event)
     if events:

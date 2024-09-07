@@ -1,0 +1,30 @@
+.search-container {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .square-btn {
+    border-radius: 0; /* Makes the buttons squared */
+  }
+  
+  .input-group .form-control {
+    border-right: none;
+    margin-right: -1px; /* Avoid double borders between the input and dropdown */
+  }
+  
+  .input-group .dropdown-toggle {
+    border-left: none;
+  }
+  
+  .btn-outline-secondary {
+    color: #343a40;
+    border-color: #343a40;
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: #343a40;
+    color: white;
+  }
+  

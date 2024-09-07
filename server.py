@@ -148,6 +148,23 @@ def search_events():
                     filtered_events.append(event)
         events = filtered_events
     
+    events = []
+    for row in events:
+        event = {
+            'id': row[0],  # Assuming 'id' is the first column
+            'title': row[1],
+            'description': row[2],
+            'startdate': row[3].strftime('%d-%m-%Y'),
+            'enddate': row[4].strftime('%d-%m-%Y'),
+            'venue': row[5],
+            'artist': row[6],
+            'host': row[7],
+            'nooftickets': row[8],
+            'price': row[9],
+            'coords': row[10]
+        }
+        events.append(event)
+        
     return jsonify(events)
 
 

@@ -4,12 +4,15 @@ import "./App.css";
 import Homepage from "./pages/Homepage";
 import Agent from "./pages/Agent";
 import CategoricalEvents from "./pages/CategoricalEvents";
+import Admin from "./pages/Admin";
 
 function App() {
     return (
         <Router>
             <div className="App">
                 <Routes>
+                
+                    <Route path="/admin" element={<Admin />} />
                     <Route path="/" element={<Homepage />} />
                     <Route path="/agent" element={<Agent />} />
                     <Route path="/concerts" element={<CategoricalEvents type="music"/>}></Route>

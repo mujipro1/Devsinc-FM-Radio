@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import './Search.css';
+import EventList from '../pages/EventList';
 
 function SearchComponent() {
   const [searchType, setSearchType] = useState('Artist');
+  const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('Select Location');
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [loading, setLoading] = useState(false); // State to handle loading
+  const [error, setError] = useState(''); // State to handle errors
+
+  const [events, setEvents] = useState([]);
 
   const handleUseBrowserLocation = () => {
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
           setLocation('Current Location');
-          console.log("Latitude: ", position.coords.latitude);
-          console.log("Longitude: ", position.coords.longitude);
         },
         (error) => {
           console.error("Error obtaining location: ", error);
@@ -30,8 +33,34 @@ function SearchComponent() {
 
   const handleUseGoogleMaps = () => {
     alert("Google Maps functionality to be implemented.");
-    // Here, you would integrate with the Google Maps API
-    // Example: Use a modal to show a Google Maps instance allowing the user to pick a location
+    // Integrate with Google Maps API here
+  };
+
+  const handleSearch = () => {
+    setLoading(true); // Set loading to true when search starts
+    setError(''); // Clear any previous errors
+    let url = `http://localhost:5000/customer/search?type=${searchType.toLowerCase()}&query=${searchQuery}`;
+    
+    if (latitude && longitude) {
+      url += `&lat=${latitude}&lon=${longitude}`;
+    }
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then(data => {
+        setEvents(data); // Update events state with the search results
+        setLoading(false); // Set loading to false once data is processed
+      })
+      .catch(error => {
+        console.error('Error during search:', error);
+        setError('An error occurred during the search. Please try again.'); // Update error state
+        setLoading(false); // Set loading to false if there's an error
+      });
   };
 
   return (
@@ -55,20 +84,20 @@ function SearchComponent() {
             </div>
           </div>
 
-          {/* Date Selector */}
           <div className="col-12 col-md-auto mb-2 mb-md-0">
             <button className="btn btn-secondary square-btn">
               <i className="bi bi-calendar"></i> Select Date
             </button>
           </div>
 
-          {/* Search Bar and Type Selector */}
           <div className="col-12 col-md mb-2 mb-md-0">
             <div className="input-group">
               <input 
                 type="text" 
                 className="form-control square-btn" 
                 placeholder="Search events" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button 
                 className="btn btn-secondary square-btn dropdown-toggle" 
@@ -85,13 +114,33 @@ function SearchComponent() {
             </div>
           </div>
 
-          {/* Search Button */}
           <div className="col-12 col-md-auto">
-            <button className="btn btn-primary square-btn w-100">Search</button>
+            <button className="btn btn-primary square-btn w-100" onClick={handleSearch}>
+              {loading ? 'Searching...' : 'Search'}
+            </button>
           </div>
         </div>
+        
+        {/* Display Errors */}
+        {error && (
+          <div className="row mt-4">
+            <div className="col-12">
+              <div className="alert alert-danger">
+                {error}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="row mt-4">
+          <div className="col-12">
+            <h3>Search Results</h3>
+            <EventList events={events} /> {/* Pass events to EventList */}
+          </div>
+        </div>
+
+        </div>
       </div>
-    </div>
   );
 }
 

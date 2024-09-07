@@ -207,6 +207,11 @@ def add_event():
         return jsonify({'error': 'Failed to add event'}), 500
 
 
+@app.route('/admin', methods=['POST'])
+def admin():
+    # get all events
+    pass
+
 if __name__ == '__main__':
     app.run(debug=True)
     

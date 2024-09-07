@@ -26,7 +26,7 @@ def login():
             'id': results[0][0],
             'name': results[0][1],
             'email': results[0][2],
-            'role': results[0][4]
+            'role': results[0][3]
         }
         return jsonify(user)
     return jsonify({'error': 'Invalid credentials'}), 401

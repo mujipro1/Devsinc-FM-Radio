@@ -19,12 +19,18 @@
   }
   
   .btn-outline-secondary {
-    color: #343a40;
+    color: #efd700;
     border-color: #343a40;
+    color:black;
   }
   
   .btn-outline-secondary:hover {
-    background-color: #343a40;
-    color: white;
+    background-color: #efd700;
+    color: black;
   }
   
+  .btn-i{
+    background-color: #efd700!important;
+    color: black;
+    height: 40px;
+  }

@@ -18,9 +18,9 @@ function App() {
                     <Route path="/admin" element={<Admin />} />
                     <Route path="/" element={<Homepage />} />
                     <Route path="/agent" element={<Agent />} />
-                    <Route path="/concerts" element={<CategoricalEvents type="music"/>}></Route>
-                    <Route path="/plays" element={<CategoricalEvents type="qawwali"/>}></Route>
-                    <Route path="/sports" element={<CategoricalEvents type="concert"/>}></Route>
+                    <Route path="/music" element={<CategoricalEvents type="music"/>}></Route>
+                    <Route path="/qawwali" element={<CategoricalEvents type="qawwali"/>}></Route>
+                    <Route path="/concert" element={<CategoricalEvents type="concert"/>}></Route>
                     <Route path="/others" element={<CategoricalEvents type="other"/>}></Route>
                     <Route path="/login" element={<SignIn/>}></Route>
                     <Route path="/SignUp" element={<SignUp/>}></Route>

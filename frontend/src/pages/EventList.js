@@ -64,7 +64,7 @@ const EventList = ({ events }) => {
         <p>No events available</p>
       ) : !detailPage && events?.length > 0 ? (
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-12">
             <div>
               {events?.map((event) => (
                 <div
@@ -73,7 +73,7 @@ const EventList = ({ events }) => {
                 >
                   <div className="col-md-5 d-flex justify-content-start">
                     <img
-                      src={"/images/" + event.image}
+                      src={"/images/concert.jpeg"}
                       alt={event.title}
                       className="event-image"
                     />

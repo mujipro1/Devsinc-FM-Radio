@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./EventList.css";
 
 const EventList = ({ events }) => {
+    console.log(events)
     return (
         <div>
             {events?.length === 0 ? (
                 <p>No events available</p>
             ) : (
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                         <div>
                             {events?.map((event) => (
                                 <div

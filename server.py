@@ -9,6 +9,29 @@ app = Flask(__name__)
 CORS(app)
 
 # Function to create a connection to MySQL
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    
+    query = "SELECT * FROM users WHERE email = %s AND password = %s"
+    params = (email, password)
+    
+    results = execute_query(query, params)
+    
+    if results:
+        user = {
+            'id': results[0][0],
+            'name': results[0][1],
+            'email': results[0][2],
+            'role': results[0][4]
+        }
+        return jsonify(user)
+    return jsonify({'error': 'Invalid credentials'}), 401
+
+
 def create_connection():
     try:
         connection = mysql.connector.connect(
@@ -207,10 +230,65 @@ def add_event():
         return jsonify({'error': 'Failed to add event'}), 500
 
 
-@app.route('/admin', methods=['POST'])
+@app.route('/admin', methods=['GET'])
 def admin():
-    # get all events
-    pass
+    # Query to get all events
+    events_query = "SELECT * FROM events"
+    events = execute_query(events_query)
+    
+
+    # Query to get total tickets sold this month
+    tickets_sold_query = """
+    SELECT SUM(sold) AS total_tickets_sold
+    FROM events
+    WHERE MONTH(startdate) = MONTH(CURDATE())
+      AND YEAR(startdate) = YEAR(CURDATE())
+    """
+    tickets_sold_result = execute_query(tickets_sold_query)
+    total_tickets_sold = tickets_sold_result[0] if tickets_sold_result and tickets_sold_result[0] else 0
+
+    # Query to get total sales this month
+    sales_query = """
+    SELECT SUM(sold * price) AS total_sales
+    FROM events
+    WHERE MONTH(startdate) = MONTH(CURDATE())
+      AND YEAR(startdate) = YEAR(CURDATE())
+    """
+    
+    no_of_agents_query = "SELECT COUNT(*) AS total_agents FROM users where role='agent'"
+    no_of_agents_result = execute_query(no_of_agents_query)
+    total_agents = no_of_agents_result[0] if no_of_agents_result and no_of_agents_result[0] else 0
+
+    sales_result = execute_query(sales_query)
+    total_sales = sales_result[0] if sales_result and sales_result[0] else 0
+    
+    eventX = []
+    for row in events:
+        event = {
+            'id': row[0],  # Assuming 'id' is the first column
+            'title': row[1],
+            'description': row[2],
+            'startdate': row[3].strftime('%d-%m-%Y'),
+            'enddate': row[4].strftime('%d-%m-%Y'),
+            'venue': row[5],
+            'artist': row[6],
+            'host': row[7],
+            'nooftickets': row[8],
+            'price': row[9],
+            'coords': row[10]
+        }
+        eventX.append(event)
+    
+    events = eventX
+    
+    return jsonify({
+        'events': events,
+        'tickets': total_tickets_sold,
+        'sales': total_sales,
+        'agents': total_agents
+    })
+    
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

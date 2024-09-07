@@ -148,7 +148,8 @@ def search_events():
                     filtered_events.append(event)
         events = filtered_events
     
-    events = []
+    
+    eventX = []
     for row in events:
         event = {
             'id': row[0],  # Assuming 'id' is the first column
@@ -163,9 +164,9 @@ def search_events():
             'price': row[9],
             'coords': row[10]
         }
-        events.append(event)
+        eventX.append(event)
         
-    return jsonify(events)
+    return jsonify(eventX)
 
 
 
@@ -205,6 +206,11 @@ def add_event():
     else:
         return jsonify({'error': 'Failed to add event'}), 500
 
+
+@app.route('/admin', methods=['POST'])
+def admin():
+    # get all events
+    pass
 
 if __name__ == '__main__':
     app.run(debug=True)

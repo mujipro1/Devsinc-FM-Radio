@@ -1,8 +1,39 @@
 import React from "react";
 import './admin.css';
 import EventList from "./EventList";
+import { useState, useEffect } from 'react';
 
 const Admin = () => {
+
+    const [activeEvents, setEvents] = useState([]);
+    const [agents, setAgents] = useState([]);
+    const [loading, setLoading] = useState(true); // State to handle loading
+    const [error, setError] = useState(''); // State to handle errors
+  
+    useEffect(() => {
+      const fetchEvents = async () => {
+        setLoading(true); // Set loading to true when fetch starts
+        setError(''); // Clear any previous errors
+  
+        try {
+          const response = await fetch(`http://localhost:5000/admin`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setEvents(data); // Update events state with the fetched data
+        } catch (error) {
+          console.error('Error fetching events:', error);
+          setError('An error occurred while fetching events. Please try again.'); // Update error state
+        } finally {
+          setLoading(false); // Set loading to false once data is processed
+        }
+      };
+  
+      fetchEvents(); // Call the fetch function
+    });
+
+
     return (
         <>
         <div className="row">

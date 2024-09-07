@@ -36,7 +36,7 @@ const Admin = () => {
                 <div className="row px-3 my-4">
                     <div className="box-cont col-md-12 p-5">
                         <h4>Live Events</h4>
-                            <EventList {events}/>
+                            {/* <EventList {events}/> */}
                     </div>
                 </div>
 

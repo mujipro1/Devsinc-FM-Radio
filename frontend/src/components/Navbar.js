@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
     return (
@@ -24,28 +25,28 @@ function Navbar() {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a
+                            <div
                                 className="nav-link text-white"
                                 aria-current="page"
                                 href="#"
                             >
-                                Concerts
-                            </a>
+                                <Link to="/concerts">Concerts</Link>
+                            </div>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-white" href="#">
-                                Plays
-                            </a>
+                        <li className="nav-item text-white">
+                            <div className="nav-link text-white" href="#">
+                            <Link to="/plays">Plays</Link>
+                            </div>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-white" href="#">
-                                Sports
-                            </a>
+                        <li className="nav-item text-white">
+                            <div className="nav-link text-white" href="#">
+                            <Link to="/sports">Sports</Link>
+                            </div>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-white" href="#">
-                                Other Events
-                            </a>
+                        <li className="nav-item text-white">
+                            <div className="nav-link text-white" href="#">
+                            <Link to="/others">Other Events</Link>
+                            </div>
                         </li>
                     </ul>
                 </div>

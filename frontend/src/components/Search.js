@@ -3,6 +3,7 @@ import './Search.css';
 import EventList from '../pages/EventList';
 
 function SearchComponent() {
+  const [searched, setSearched] = useState(false);
   const [searchType, setSearchType] = useState('Artist');
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('Select Location');
@@ -37,6 +38,7 @@ function SearchComponent() {
   };
 
   const handleSearch = () => {
+    setSearched(true);
     setLoading(true); // Set loading to true when search starts
     setError(''); // Clear any previous errors
     let url = `http://localhost:5000/customer/search?type=${searchType.toLowerCase()}&query=${searchQuery}`;
@@ -132,12 +134,12 @@ function SearchComponent() {
           </div>
         )}
 
-        <div className="row mt-4">
+        {searched && <div className="row mt-4">
           <div className="col-12">
             <h3>Search Results</h3>
             <EventList events={events} /> {/* Pass events to EventList */}
           </div>
-        </div>
+        </div>}
 
         </div>
       </div>

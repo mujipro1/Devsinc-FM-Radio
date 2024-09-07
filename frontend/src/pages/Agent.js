@@ -5,11 +5,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button } from "react-bootstrap";
 import Profile from "../components/Profile"; // Import the Profile component
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import EventList from "./EventList"; // Import the EventList component
 
 const localizer = momentLocalizer(moment);
 
 const Agent = () => {
-    const [activeTab, setActiveTab] = useState("calendar");
+    const [activeTab, setActiveTab] = useState("events");
     const [events, setEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [newEventTitle, setNewEventTitle] = useState("");
@@ -20,9 +22,24 @@ const Agent = () => {
         description: "A short description about John Doe.",
     }); // Example agent data
 
+    const navigate = useNavigate(); // Initialize useNavigate hook
+
     // Handle adding a new event
     const addEvent = () => {
         if (newEventTitle && selectedDate) {
+            const today = new Date().setHours(0, 0, 0, 0); // Normalize time to compare dates only
+            const selectedDateNormalized = new Date(selectedDate).setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+            if (selectedDateNormalized < today) {
+                alert("Cannot add events to past dates.");
+                return;
+            }
+
             const newEvent = {
                 id: events.length, // Assign a unique ID
                 title: newEventTitle,
@@ -32,6 +49,7 @@ const Agent = () => {
             };
             setEvents([...events, newEvent]);
             setNewEventTitle(""); // Clear the input after adding
+            setSelectedDate(null); // Clear the selected date after adding
         }
     };
 
@@ -66,6 +84,8 @@ const Agent = () => {
 
     // Calendar Content
     const renderCalendar = () => {
+        const today = new Date();
+
         return (
             <div className="container">
                 <Calendar
@@ -75,7 +95,19 @@ const Agent = () => {
                     endAccessor="end"
                     style={{ height: 500 }}
                     selectable
-                    onSelectSlot={(slotInfo) => setSelectedDate(slotInfo.start)} // Click on a date to add an event
+                    min={today} // Disable selecting past dates
+                    onSelectSlot={(slotInfo) => {
+                        const selectedDateNormalized = new Date(
+                            slotInfo.start
+                        ).setHours(0, 0, 0, 0);
+                        const todayNormalized = today.setHours(0, 0, 0, 0);
+
+                        if (selectedDateNormalized >= todayNormalized) {
+                            setSelectedDate(slotInfo.start); // Click on a date to add an event
+                        } else {
+                            alert("Cannot add events to past dates.");
+                        }
+                    }}
                     onSelectEvent={(event) => {
                         setSelectedEvent(event); // Open modal for editing
                         setEditTitle(event.title); // Prefill the title for editing
@@ -110,7 +142,7 @@ const Agent = () => {
     const renderContent = () => {
         switch (activeTab) {
             case "events":
-                return <h1>My Events</h1>;
+                return <EventList events={events} />;
             case "calendar":
                 return renderCalendar();
             case "profile":
@@ -124,8 +156,8 @@ const Agent = () => {
         <div className="container-fluid">
             <div className="row vh-100">
                 {/* Sidebar */}
-                <div className="col-md-3 col-lg-2 bg-dark text-white p-3">
-                    <ul className="nav flex-column text-center">
+                <div className="col-md-3 col-lg-2 bg-dark text-white p-3 d-flex flex-column">
+                    <ul className="nav flex-column text-center mb-auto">
                         <li className="nav-item mb-3">
                             <button
                                 className={`nav-link text-white ${
@@ -163,6 +195,15 @@ const Agent = () => {
                             </button>
                         </li>
                     </ul>
+                    {/* Go Back Button */}
+                    <div className="mt-auto">
+                        <Button
+                            variant="secondary"
+                            onClick={() => navigate("/")}
+                        >
+                            Go Back
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Content */}

@@ -68,6 +68,7 @@ function SearchComponent() {
         return response.json(); // Parse JSON if response is ok
       })
       .then(data => {
+        console.log(data)
         setEvents(data); // Update events state with the search results
         setLoading(false); // Set loading to false once data is processed
       })
@@ -79,14 +80,14 @@ function SearchComponent() {
   };
 
   return (
-    <div className="search-container">
+    <div className="search-container mt-0">
       <div className="container">
         <div className="row align-items-center justify-content-center">
           {/* Location Selector */}
-          <div className="col-12 col-md-auto mb-2 mb-md-0">
+          <div className="col-12 col-md-auto mb-2 ">
             <div className="btn-group">
               <button 
-                className="btn btn-secondary square-btn dropdown-toggle" 
+                className="btn btn-secondary  dropdown-toggle" 
                 data-bs-toggle="dropdown" 
                 aria-expanded="false"
               >
@@ -109,7 +110,7 @@ function SearchComponent() {
                 startDate={startDate}
                 endDate={endDate}
                 placeholderText="Start Date"
-                className="form-control square-btn"
+                className="form-control "
               />
               <span className="mx-2">to</span>
               <DatePicker
@@ -119,7 +120,7 @@ function SearchComponent() {
                 startDate={startDate}
                 endDate={endDate}
                 placeholderText="End Date"
-                className="form-control square-btn"
+                className="form-control "
               />
             </div>
           </div>
@@ -129,29 +130,29 @@ function SearchComponent() {
             <div className="input-group">
               <input 
                 type="text" 
-                className="form-control square-btn" 
+                className="form-control " 
                 placeholder="Search events" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button 
-                className="btn btn-secondary square-btn dropdown-toggle" 
+                className="btn btn-secondary  dropdown-toggle" 
                 data-bs-toggle="dropdown" 
                 aria-expanded="false"
               >
                 {searchType}
               </button>
               <ul className="dropdown-menu dropdown-menu-end">
-                <li><button className="dropdown-item" onClick={() => setSearchType('Artist')}>Artist</button></li>
-                <li><button className="dropdown-item" onClick={() => setSearchType('Venue')}>Venue</button></li>
-                <li><button className="dropdown-item" onClick={() => setSearchType('Event')}>Event</button></li>
+                <li><button className="dropdown-item" onClick={() => setSearchType('music')}>Music</button></li>
+                <li><button className="dropdown-item" onClick={() => setSearchType('qawwali')}>Qawwali</button></li>
+                <li><button className="dropdown-item" onClick={() => setSearchType('concert')}>Concert</button></li>
               </ul>
             </div>
           </div>
 
           {/* Search Button */}
           <div className="col-12 col-md-auto">
-            <button className="btn btn-primary square-btn w-100" onClick={handleSearch}>
+            <button className="btn btn-i  w-100" onClick={handleSearch}>
               {loading ? 'Searching...' : 'Search'}
             </button>
           </div>

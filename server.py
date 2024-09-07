@@ -153,12 +153,13 @@ def search_events():
     """
     params = (
         type, type,
-        query, f'%{query}%', f'%{query}%', f'%{query}%', f'%{query}%', f'%{query}%'
+        query, query, query, query, query, query
     )
     
     # Fetch events matching type and query
     events = execute_query(base_query, params)
-
+    print(events)
+    
     # Filter by coordinates if lat and lon are provided
     if lat is not None and lon is not None:
         filtered_events = []

@@ -151,6 +151,42 @@ def search_events():
 
 
 
+@app.route('/api/events', methods=['POST'])
+def add_event():
+    data = request.get_json()
+
+    # Extract data from request
+    title = data.get('title')
+    description = data.get('description')
+    startdate = data.get('startdate')
+    enddate = data.get('enddate')
+    venue = data.get('venue')
+    artist = data.get('artist')
+    host = data.get('host')
+    nooftickets = data.get('nooftickets')
+    price = data.get('price')
+    coords = data.get('coords')
+    agentID = data.get('agentID')
+
+    # Validate data (basic checks)
+    if not all([title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    # Prepare SQL query to insert event
+    query = """
+    INSERT INTO events (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    params = (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID)
+
+    # Execute query
+    event_id = execute_query(query, params)
+
+    if event_id:
+        return jsonify({'message': 'Event added successfully', 'event_id': event_id}), 201
+    else:
+        return jsonify({'error': 'Failed to add event'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

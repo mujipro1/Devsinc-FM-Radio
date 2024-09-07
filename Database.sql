@@ -1,4 +1,7 @@
--- Create the Users table
+Drop Database Devsinc;
+Create Database Devsinc;
+Use Devsinc;
+
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -21,6 +24,9 @@ CREATE TABLE Events (
     price DECIMAL(10, 2),
     coords VARCHAR(255),
     agentID INT,
+    etype VARCHAR(255),
+    sold INT,
+    views INT,
     FOREIGN KEY (agentID) REFERENCES Users(id)
 );
 
@@ -53,12 +59,12 @@ INSERT INTO Users (name, email, role, password) VALUES
 ('Emily Davis', 'emily@example.com', 'user', 'password123');
 
 -- Insert dummy data into Events table
-INSERT INTO Events (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID) VALUES
-('Music Fest', 'A grand music festival', '2024-09-20', '2024-09-21', 'Central Park', 'The Weekend', 'John Doe', 1000, 49.99, '40.785091,-73.968285', 2),
-('Art Exhibition', 'Modern art exhibition', '2024-10-01', '2024-10-05', 'Art Gallery', 'Various Artists', 'Alice Smith', 500, 25.00, '40.729515,-73.996460', 3),
-('Food Carnival', 'Delicious food from around the world', '2024-09-15', '2024-09-16', 'City Plaza', 'Chef Gordan', 'Bob Johnson', 1500, 35.00, '40.741895,-73.989308', 4),
-('Tech Conference', 'Latest in technology trends', '2024-11-10', '2024-11-12', 'Convention Center', 'Elon Musk', 'Charlie Brown', 3000, 199.99, '40.748817,-73.985428', 5),
-('Comedy Night', 'Stand-up comedy night', '2024-08-30', '2024-08-30', 'Downtown Theater', 'Kevin Hart', 'Emily Davis', 800, 59.99, '40.730610,-73.935242', 2);
+INSERT INTO Events (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID, etype, sold, views) VALUES
+('Music Fest', 'A grand music festival', '2024-09-20', '2024-09-21', 'Central Park', 'The Weekend', 'John Doe', 1000, 49.99, '40.785091,-73.968285', 2, 'music', 0, 0),
+('Art Exhibition', 'Modern art exhibition', '2024-10-01', '2024-10-05', 'Art Gallery', 'Various Artists', 'Alice Smith', 500, 25.00, '40.729515,-73.996460', 3, 'qawwali', 0, 0),
+('Food Carnival', 'Delicious food from around the world', '2024-09-15', '2024-09-16', 'City Plaza', 'Chef Gordan', 'Bob Johnson', 1500, 35.00, '40.741895,-73.989308', 4, 'music', 0, 0),
+('Tech Conference', 'Latest in technology trends', '2024-11-10', '2024-11-12', 'Convention Center', 'Elon Musk', 'Charlie Brown', 3000, 199.99, '40.748817,-73.985428', 5, 'music', 0, 0),
+('Comedy Night', 'Stand-up comedy night', '2024-08-30', '2024-08-30', 'Downtown Theater', 'Kevin Hart', 'Emily Davis', 800, 59.99, '40.730610,-73.935242', 2,'concert', 0, 0);
 
 -- Insert dummy data into Images table
 INSERT INTO Images (event_id, image_url) VALUES

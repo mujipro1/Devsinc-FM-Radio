@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -24,6 +24,24 @@ const Agent = () => {
 
     const navigate = useNavigate(); // Initialize useNavigate hook
 
+    useEffect(() => {
+        let url = `http://localhost:5000/agent?id=test`;
+    
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then(data => {
+        setEvents(data); // Update events state with the search results
+      })
+      .catch(error => {
+        console.error('Error during search:', error);
+      });
+    });  
     // Handle adding a new event
     const addEvent = () => {
         if (newEventTitle && selectedDate) {

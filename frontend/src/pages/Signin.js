@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import {useNavigate} from 'react-router-dom'
 import './Signin.css'; // You can create this file to add custom styles if needed
 
-function SignIn() {
+function SignIn( {user, setUser}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,6 +14,8 @@ function SignIn() {
     event.preventDefault();
     setLoading(true);
     setError('');
+
+
 
     fetch('http://localhost:5000/login', {
       method: 'POST',
@@ -34,6 +36,7 @@ function SignIn() {
         if (data.role == "admin") {
             navigate("/admin")
         } else {
+            setUser(data.id);
             navigate("/agent")
         }
         setLoading(false);

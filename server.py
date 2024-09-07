@@ -217,7 +217,7 @@ def add_event():
     # Prepare SQL query to insert event
     query = """
     INSERT INTO events (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID, sold, views)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     params = (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID, 0, 0)
 
@@ -288,7 +288,7 @@ def admin():
         'agents': total_agents
     })
     
-@app.route('signup', methods=['POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
     name = data.get('name')

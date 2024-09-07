@@ -11,7 +11,7 @@ import AddEventModal from "../components/AddEventModal";
 
 const localizer = momentLocalizer(moment);
 
-const Agent = () => {
+const Agent = ( { user }) => {
     const [activeTab, setActiveTab] = useState("events");
     const [events, setEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -25,6 +25,18 @@ const Agent = () => {
     });
 
     const navigate = useNavigate();
+
+    function formatDateForSQL(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    
 
     useEffect(() => {
         let url = `http://localhost:5000/agent?id=test`;
@@ -60,20 +72,40 @@ const Agent = () => {
         }
 
         const event = {
-            id: events.length,
             title: newEvent.title,
-            start: new Date(newEvent.start),
-            end: new Date(newEvent.end),
+            startdate: formatDateForSQL(new Date(newEvent.start)),
+            enddate: formatDateForSQL(new Date(newEvent.end)),
             description: newEvent.description,
             venue: newEvent.venue,
             artist: newEvent.artist,
             host: newEvent.host,
-            capacity: newEvent.capacity,
-            numberOfTickets: newEvent.numberOfTickets,
+            nooftickets: newEvent.numberOfTickets,
             price: newEvent.price,
-            allDay: false,
+            agentID: user,
+            coords: "37, 73",
         };
-        setEvents([...events, event]);
+
+        fetch('http://localhost:5000/addEvent', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(event),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then((data) => {
+              // Handle success, e.g., redirect to another page or show a success message
+              console.log('successful:', data);
+              navigate('/agent')
+            })
+            .catch((error) => {
+              console.error('Error during sign-in:', error);
+            });
     };
 
     const updateEvent = () => {

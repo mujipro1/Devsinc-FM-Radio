@@ -8,7 +8,7 @@ function Navbar() {
             style={{ backgroundColor: "#343a40" }}
         >
             <div className="container-fluid">
-                <a className="navbar-brand text-white" href="#">
+                <a className="navbar-brand text-white" href="/">
                     Logo
                 </a>
                 <button
@@ -35,17 +35,17 @@ function Navbar() {
                         </li>
                         <li className="nav-item text-white">
                             <div className="nav-link text-white" href="#">
-                            <Link to="/plays">Plays</Link>
+                                <Link to="/plays">Plays</Link>
                             </div>
                         </li>
                         <li className="nav-item text-white">
                             <div className="nav-link text-white" href="#">
-                            <Link to="/sports">Sports</Link>
+                                <Link to="/sports">Sports</Link>
                             </div>
                         </li>
                         <li className="nav-item text-white">
                             <div className="nav-link text-white" href="#">
-                            <Link to="/others">Other Events</Link>
+                                <Link to="/others">Other Events</Link>
                             </div>
                         </li>
                     </ul>

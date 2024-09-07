@@ -151,7 +151,7 @@ def search_events():
 
 
 
-@app.route('/api/events', methods=['POST'])
+@app.route('/addEvent', methods=['POST'])
 def add_event():
     data = request.get_json()
 
@@ -174,10 +174,10 @@ def add_event():
 
     # Prepare SQL query to insert event
     query = """
-    INSERT INTO events (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID)
+    INSERT INTO events (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID, sold, views)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
-    params = (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID)
+    params = (title, description, startdate, enddate, venue, artist, host, nooftickets, price, coords, agentID, 0, 0)
 
     # Execute query
     event_id = execute_query(query, params)

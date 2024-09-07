@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from 'react-datepicker';
 import './Search.css';
 import EventList from '../pages/EventList';
 
@@ -9,9 +12,10 @@ function SearchComponent() {
   const [location, setLocation] = useState('Select Location');
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [loading, setLoading] = useState(false); // State to handle loading
   const [error, setError] = useState(''); // State to handle errors
-
   const [events, setEvents] = useState([]);
 
   const handleUseBrowserLocation = () => {
@@ -41,10 +45,19 @@ function SearchComponent() {
     setSearched(true);
     setLoading(true); // Set loading to true when search starts
     setError(''); // Clear any previous errors
+
     let url = `http://localhost:5000/customer?type=${searchType.toLowerCase()}&query=${searchQuery}`;
     
     if (latitude && longitude) {
       url += `&lat=${latitude}&lon=${longitude}`;
+    }
+
+    if (startDate) {
+      url += `&startDate=${startDate.toISOString()}`;
+    }
+    
+    if (endDate) {
+      url += `&endDate=${endDate.toISOString()}`;
     }
 
     fetch(url)
@@ -86,12 +99,32 @@ function SearchComponent() {
             </div>
           </div>
 
+          {/* Date Selector */}
           <div className="col-12 col-md-auto mb-2 mb-md-0">
-            <button className="btn btn-secondary square-btn">
-              <i className="bi bi-calendar"></i> Select Date
-            </button>
+            <div className="d-flex align-items-center">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Start Date"
+                className="form-control square-btn"
+              />
+              <span className="mx-2">to</span>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="End Date"
+                className="form-control square-btn"
+              />
+            </div>
           </div>
 
+          {/* Search Bar and Type Selector */}
           <div className="col-12 col-md mb-2 mb-md-0">
             <div className="input-group">
               <input 
@@ -116,6 +149,7 @@ function SearchComponent() {
             </div>
           </div>
 
+          {/* Search Button */}
           <div className="col-12 col-md-auto">
             <button className="btn btn-primary square-btn w-100" onClick={handleSearch}>
               {loading ? 'Searching...' : 'Search'}
@@ -141,8 +175,8 @@ function SearchComponent() {
           </div>
         </div>}
 
-        </div>
       </div>
+    </div>
   );
 }
 
